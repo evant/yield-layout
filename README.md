@@ -99,7 +99,7 @@ You can also define yield id's to specify which child views go with which yields
 </me.tatarka.yieldlayout.YieldLayout>
 ```
 
-If you want to use this in a list adapter, you can't use the `YieldLayout` directly because ListView will error when it tries to add itself. Instead, call `inflate(parent)` on the `YieldLayout` to return the final view to return from the adapter.
+If you want to use this in a list adapter, you can't use the `YieldLayout` directly because ListView will error when `YieldLayout` tries to add itself. Instead, call `inflate(parent)` on the `YieldLayout` to return the final view to return from the adapter.
 
 ```java
 @Override
