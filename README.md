@@ -5,7 +5,7 @@ A layout that allows you to "yield" spaces from one layout file to another. This
 
 ## Usage
 
-You can create a laout file that has places to yield content.
+You can create a layout file that has places to yield content.
 
 ```xml
 <!-- yield_view.xml -->
