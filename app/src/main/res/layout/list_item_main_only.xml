@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<me.tatarka.yieldlayout.YieldLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:yield_layout="@layout/list_item_base">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:background="@android:color/darker_gray"
+        >
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Header"
+            />
+
+        <TextView
+            android:id="@+id/subheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subheader"
+            />
+    </LinearLayout>
+</me.tatarka.yieldlayout.YieldLayout>
