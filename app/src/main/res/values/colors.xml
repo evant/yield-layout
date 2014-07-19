@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_white">#deffffff</color>
+    <color name="text_black">#de000000</color>
+    <color name="text_black_secondary">#8a000000</color>
+    <color name="divider_black">#1f000000</color>
+    <color name="selection">#19000000</color>
+    <color name="primary_500">#5677fc</color>
+    <color name="accent_500">#ff9800</color>
+</resources>

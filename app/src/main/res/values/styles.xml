@@ -1,8 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppThemeBase" parent="Theme.AppCompat.Light.DarkActionBar">
     </style>
 
+    <style name="AppTheme" parent="AppThemeBase">
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <item name="actionDropDownStyle">@style/ActionBarDropdownStyle</item>
+    </style>
+
+    <style name="ActionBarStyleBase" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/primary_500</item>
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="ActionBarStyle" parent="ActionBarStyleBase">
+        <item name="displayOptions">useLogo</item>
+    </style>
+
+    <style name="ActionBarDropdownStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_selector</item>
+        <item name="android:popupBackground">@drawable/abc_menu_dropdown_panel_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/menu_selector</item>
+    </style>
 </resources>

@@ -11,23 +11,25 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:background="@android:color/darker_gray"
-        >
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Header"
+            android:text="@string/header"
+            android:textSize="@dimen/text_subhead"
+            android:textColor="@color/text_black"
             />
 
         <TextView
             android:id="@+id/subheader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Subheader"
+            android:text="@string/subheader"
+            android:textSize="@dimen/text_body_1"
+            android:textColor="@color/text_black_secondary"
             />
     </LinearLayout>
 </me.tatarka.yieldlayout.YieldLayout>

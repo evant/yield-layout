@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">YieldLayout</string>
-    <string name="in_between">I\'m in between</string>
+    <string name="between">Between</string>
+    <string name="first">First</string>
+    <string name="second">Second</string>
+    <string name="header">Header</string>
+    <string name="subheader">Subheader</string>
+    <string name="content">One line of text</string>
 </resources>

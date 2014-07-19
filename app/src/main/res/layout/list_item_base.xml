@@ -4,34 +4,47 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingRight="16dp"
+    android:clipToPadding="false">
 
-    <TextView
+    <FrameLayout
         android:id="@+id/square"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@android:color/holo_blue_dark"
-        android:text="Common block"
-        android:padding="15dp"
-        android:gravity="center"
-        />
+        android:layout_width="72dp"
+        android:layout_height="72dp">
+        <View
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/circle"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            />
+    </FrameLayout>
 
     <me.tatarka.yieldlayout.Yield
         android:id="@+id/main"
         android:layout_toRightOf="@id/square"
-        android:layout_toLeftOf="@+id/sidebar"
+        android:layout_toLeftOf="@+id/action"
         android:layout_alignWithParentIfMissing="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@id/square"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         />
 
     <me.tatarka.yieldlayout.Yield
-        android:id="@+id/sidebar"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
+        android:id="@+id/action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/square"
-        android:layout_alignBottom="@id/square"
+        android:layout_centerVertical="true"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_black"
+        android:layout_below="@id/square"
+        android:layout_toRightOf="@id/square"
+        android:layout_marginRight="-16dp"
         />
 </RelativeLayout>

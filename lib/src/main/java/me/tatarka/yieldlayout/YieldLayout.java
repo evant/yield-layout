@@ -76,25 +76,15 @@ public class YieldLayout extends ViewGroup {
      */
     public void setLayoutResource(int layoutResource) {
         mLayoutResource = layoutResource;
-        if (mLayoutResource != 0 && getParent() != null) {
-            inflate();
-        }
     }
 
-    /**
-     * Inflates it's layout without adding itself to a parent. This is useful for when you must
-     * provide a view but cannot add it to a parent yourself. Like in a listAdapter, for example.
-     *
-     * @param parent the parent view to inflate with.
-     * @return the view, not added to the parent
-     */
-    public View inflate(ViewGroup parent) {
-        if (parent == null) {
-            throw new IllegalStateException("YieldLayout must have a non-null ViewGroup viewParent (Instead parent was: '" + parent + "')");
+    public View inflate(ViewGroup root, boolean attachToParent) {
+        if (mLayoutResource == 0) {
+            throw new IllegalStateException("YieldLayout must have a valid layoutResource");
         }
 
         LayoutInflater factory = LayoutInflater.from(getContext());
-        View view = factory.inflate(mLayoutResource, parent, false);
+        View view = factory.inflate(mLayoutResource, root, false);
 
         if (view instanceof ViewGroup) {
             replaceYieldWithChildren((ViewGroup) view);
@@ -102,33 +92,24 @@ public class YieldLayout extends ViewGroup {
             throw new IllegalArgumentException("YieldLayout layout is not a ViewGroup and so does not expect children");
         }
 
+        if (attachToParent && root != null) {
+            replaceView(this, view);
+        }
+
         return view;
+    }
+
+    public View inflate(ViewGroup root) {
+        return inflate(root, true);
     }
 
     private View inflate() {
         ViewParent viewParent = getParent();
-
-        if (viewParent == null || !(viewParent instanceof ViewGroup)) {
+        if (!(viewParent instanceof ViewGroup)) {
             throw new IllegalStateException("YieldLayout must have a non-null ViewGroup viewParent (Instead parent was: '" + viewParent + "')");
         }
-
-        if (mLayoutResource == 0) {
-            throw new IllegalArgumentException("YieldLayout must have a valid layoutResource");
-        }
-
         ViewGroup parent = (ViewGroup) viewParent;
-        LayoutInflater factory = LayoutInflater.from(getContext());
-        View view = factory.inflate(mLayoutResource, parent, false);
-
-        if (view instanceof ViewGroup) {
-            replaceYieldWithChildren((ViewGroup) view);
-        } else if (getChildCount() > 0) {
-            throw new IllegalArgumentException("YieldLayout layout is not a ViewGroup and so does not expect children");
-        }
-
-        replaceView(this, view);
-
-        return view;
+       return inflate(parent, true);
     }
 
     private void replaceYieldWithChildren(ViewGroup viewLayout) {

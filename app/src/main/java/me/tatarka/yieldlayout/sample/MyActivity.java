@@ -1,30 +1,46 @@
 package me.tatarka.yieldlayout.sample;
 
-import android.app.ListActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import me.tatarka.yieldlayout.YieldLayout;
-
-public class MyActivity extends ListActivity {
+public class MyActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new MyListAdapter());
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        ActionBarSpinnerAdapter adapter = new ActionBarSpinnerAdapter();
+        actionBar.setListNavigationCallbacks(adapter, adapter);
     }
 
-    private class MyListAdapter extends BaseAdapter {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private class ActionBarSpinnerAdapter extends BaseAdapter implements ActionBar.OnNavigationListener {
+        ExampleFragment[] fragments = new ExampleFragment[] {
+                new BasicExampleFragment(),
+                new ListExampleFragment()
+        };
+
         @Override
         public int getCount() {
-            return 20;
+            return fragments.length;
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public ExampleFragment getItem(int position) {
+            return fragments[position];
         }
 
         @Override
@@ -33,23 +49,38 @@ public class MyActivity extends ListActivity {
         }
 
         @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                int layout = getItemViewType(position) == 0 ? R.layout.list_item_main_only : R.layout.list_item_with_sidebar;
-                View view = LayoutInflater.from(MyActivity.this).inflate(layout, parent, false);
-                convertView = ((YieldLayout) view).inflate(parent);
+                convertView = LayoutInflater.from(MyActivity.this).inflate(R.layout.list_item_actionbar, parent, false);
             }
+
+            ((TextView) convertView).setText(getItem(position).getTitle());
+
             return convertView;
         }
 
         @Override
-        public int getItemViewType(int position) {
-            return position % 2;
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(MyActivity.this).inflate(R.layout.list_item_actionbar_dropdown, parent, false);
+            }
+
+            ((TextView) convertView).setText(getItem(position).getTitle());
+
+            return convertView;
         }
 
         @Override
-        public int getViewTypeCount() {
-            return 2;
+        public boolean onNavigationItemSelected(int position, long id) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, getItem(position))
+                    .commit();
+            return true;
         }
     }
 }

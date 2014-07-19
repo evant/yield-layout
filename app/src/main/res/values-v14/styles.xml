@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="AppThemeBase">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionDropDownStyle">@style/ActionBarDropdownStyle</item>
+    </style>
+
+    <style name="ActionBarStyle" parent="ActionBarStyleBase">
+        <item name="android:displayOptions">useLogo</item>
+    </style>
+</resources>
