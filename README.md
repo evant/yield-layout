@@ -129,7 +129,7 @@ If you want to use this in a list adapter, you can't use the `YieldLayout` direc
 public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
         int layout = getItemViewType(position) == 0 ? R.layout.list_item_1 : R.layout.list_item_2;  
-        convertView = YieldLayoutInflater.from(getActivity()).inflate(layout, parent, false);
+        convertView = YieldLayoutInflater.from(mContext).inflate(layout, parent, false);
     }
     return convertView;
 }
