@@ -11,16 +11,20 @@
         app:layout_yield_id="@+id/second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Second"
-        android:padding="15dp"
-        android:gravity="right"
+        android:text="@string/second"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/text_display_2"
+        android:gravity="center"
         />
 
     <TextView
         app:layout_yield_id="@+id/first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="First"
-        android:padding="15dp"
+        android:gravity="center"
+        android:text="@string/first"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/text_display_2"
         />
 </me.tatarka.yieldlayout.YieldLayout>
+
