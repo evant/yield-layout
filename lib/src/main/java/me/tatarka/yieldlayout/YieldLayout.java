@@ -120,12 +120,7 @@ public class YieldLayout extends ViewGroup {
         removeAllViewsInLayout();
 
         ArrayList<Yield> yieldViews = new ArrayList<Yield>(children.size());
-        for (int i = 0; i < viewLayout.getChildCount(); i++) {
-            View child = viewLayout.getChildAt(i);
-            if (child instanceof Yield) {
-                yieldViews.add((Yield) child);
-            }
-        }
+        collectYieldViews(viewLayout, yieldViews);
 
         if (children.size() > yieldViews.size()) {
             throw new IllegalArgumentException("YieldLayout you have added more children (" + children.size() + ") than expected (" + yieldViews.size() + ")");
@@ -174,6 +169,17 @@ public class YieldLayout extends ViewGroup {
         //Remove any extra yield views that weren't replaced by children
         for (Yield yield : yieldViews) {
             viewLayout.removeViewInLayout(yield);
+        }
+    }
+
+    private void collectYieldViews(ViewGroup viewLayout, List<Yield> yieldViews) {
+        for (int i = 0; i < viewLayout.getChildCount(); i++) {
+            View child = viewLayout.getChildAt(i);
+            if (child instanceof Yield) {
+                yieldViews.add((Yield) child);
+            } else if (child instanceof ViewGroup) {
+                collectYieldViews((ViewGroup) child, yieldViews);
+            }
         }
     }
 
