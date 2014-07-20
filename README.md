@@ -5,6 +5,8 @@ Have you ever had to create two almost-identical layout files because they had a
 
 YieldLayout to the rescue! It works opposite of `<include/>` so you can combine one layout around another instead of inside it. After it does it's magic, you will have 0 extra views in your layout hierarchy, just like `<include/>`, so it's like it was never there.
 
+![preview](https://raw.githubusercontent.com/evant/yield-layout/master/images/preview.png)
+
 ## Usage
 
 You can create a layout file that has places to yield content.
