@@ -11,15 +11,29 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class MyActivity extends ActionBarActivity {
+    private static final String INDEX = "index";
+
+    private int mCurrentIndex = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(INDEX, 0);
+        }
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
         ActionBarSpinnerAdapter adapter = new ActionBarSpinnerAdapter();
         actionBar.setListNavigationCallbacks(adapter, adapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(INDEX, mCurrentIndex);
     }
 
     @Override
@@ -30,7 +44,8 @@ public class MyActivity extends ActionBarActivity {
     private class ActionBarSpinnerAdapter extends BaseAdapter implements ActionBar.OnNavigationListener {
         ExampleFragment[] fragments = new ExampleFragment[] {
                 new BasicExampleFragment(),
-                new ListExampleFragment()
+                new ListExampleFragment(),
+                new DynamicExampleFragment()
         };
 
         @Override
@@ -77,9 +92,13 @@ public class MyActivity extends ActionBarActivity {
 
         @Override
         public boolean onNavigationItemSelected(int position, long id) {
+            if (mCurrentIndex == position) return true;
+            mCurrentIndex = position;
+
             getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, getItem(position))
                     .commit();
+
             return true;
         }
     }

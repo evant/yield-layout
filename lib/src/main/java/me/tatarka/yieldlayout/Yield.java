@@ -1,6 +1,7 @@
 package me.tatarka.yieldlayout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +17,9 @@ import android.view.View;
  * placeholder view, but at runtime it will be a view with 0 size.
  */
 public final class Yield extends View {
+    private boolean mKeepIfEmpty;
+
+    private boolean mShowEditPreview;
     private int mEditModeMinimumWidth;
     private int mEditModeMinimumHeight;
     private TextPaint mEditModeTextPaint;
@@ -27,17 +31,25 @@ public final class Yield extends View {
     }
 
     public Yield(Context context, AttributeSet attrs) {
-        super(context, attrs, 0);
-        init();
+        this(context, attrs, 0);
     }
 
     public Yield(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Yield);
+            mKeepIfEmpty = a.getBoolean(R.styleable.Yield_yield_keep_if_empty, mKeepIfEmpty);
+            a.recycle();
+        }
+
         init();
     }
 
     private void init() {
-        if (isInEditMode()) {
+        mShowEditPreview = isInEditMode();
+
+        if (mShowEditPreview) {
             setWillNotDraw(false);
             mEditModeMinimumWidth = dpToPx(100);
             mEditModeMinimumHeight = dpToPx(32);
@@ -60,9 +72,21 @@ public final class Yield extends View {
         }
     }
 
+    public boolean getKeepIfEmpty() {
+        return mKeepIfEmpty;
+    }
+
+    public void setKeepIfEmpty(boolean value) {
+        mKeepIfEmpty = value;
+    }
+
+    void notifyKept() {
+        mShowEditPreview = false;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (isInEditMode()) {
+        if (mShowEditPreview) {
             setMeasuredDimension(getBetterDefaultSize(mEditModeMinimumWidth, widthMeasureSpec),
                     getBetterDefaultSize(mEditModeMinimumHeight, heightMeasureSpec));
         } else {
@@ -72,7 +96,7 @@ public final class Yield extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (isInEditMode()) {
+        if (mShowEditPreview) {
             canvas.drawRGB(211, 211, 211);
             canvas.drawRect(0, 0, getWidth(), getHeight(), mEditModeBorderPaint);
             canvas.drawText("Yield", getWidth() / 2, (int) (getHeight() / 2  - (mEditModeTextPaint.descent() + mEditModeTextPaint.ascent()) / 2), mEditModeTextPaint);

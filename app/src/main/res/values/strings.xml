@@ -5,5 +5,13 @@
     <string name="second">Second</string>
     <string name="header">Header</string>
     <string name="subheader">Subheader</string>
-    <string name="content">One line of text</string>
+    <string name="layout_1">Layout 1</string>
+    <string name="layout_2">Layout 2</string>
+    <string name="footer">Footer</string>
+
+    <string name="one_line_content">One line of text</string>
+    <string name="content">
+       Locavore Truffaut keffiyeh Williamsburg, ethical fap ethnic fashion axe Godard freegan. Pinterest narwhal Intelligentsia viral, twee crucifix asymmetrical. Hella lomo ethical viral, cardigan cornhole VHS. Freegan tofu put a bird on it 90\'s, whatever slow-carb dreamcatcher sriracha trust fund Vice Tumblr crucifix gluten-free American Apparel VHS. Artisan High Life cardigan Odd Future Carles, direct trade ethical next level disrupt fixie Bushwick wolf ethnic. Fanny pack kale chips tousled, forage master cleanse mlkshk Williamsburg pug messenger bag photo booth readymade. Tonx keffiyeh ethical chia leggings, pickled Odd Future lomo swag put a bird on it art party letterpress beard squid.
+Raw denim gastropub banjo biodiesel Shoreditch actually. Banksy fashion axe Schlitz keffiyeh Marfa, art party drinking vinegar leggings twee mixtape post-ironic iPhone mlkshk umami gastropub. Deep v kogi fap bitters cred. Skateboard fanny pack DIY McSweeney\'s, Marfa Intelligentsia pork belly Thundercats asymmetrical post-ironic iPhone drinking vinegar normcore. Fashion axe lo-fi slow-carb, authentic Brooklyn cornhole Pitchfork typewriter. Vinyl tattooed American Apparel master cleanse, post-ironic kogi lomo wayfarers skateboard fap distillery. Keffiyeh Helvetica 3 wolf moon, bicycle rights letterpress typewriter selfies pop-up lomo.
+    </string>
 </resources>

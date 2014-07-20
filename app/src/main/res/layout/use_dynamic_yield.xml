@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/btn_layout_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:checkedButton="@+id/btn_layout_1"
+        android:padding="16dp">
+
+        <RadioButton
+            android:id="@+id/btn_layout_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/layout_1"
+            android:textSize="@dimen/text_menu"
+            android:textColor="@color/text_black"
+            android:layout_marginRight="16dp"
+            />
+
+        <RadioButton
+            android:id="@+id/btn_layout_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/layout_2"
+            android:textSize="@dimen/text_menu"
+            android:textColor="@color/text_black"
+            />
+    </RadioGroup>
+
+    <me.tatarka.yieldlayout.YieldLayout
+        android:id="@+id/yield_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tools_yield_layout="@layout/dynamic_layout_1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/header"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/text_title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/content"
+            android:textColor="@color/text_black_secondary"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/footer"
+            android:textSize="@dimen/text_subhead"
+            android:textColor="@color/text_black"
+            />
+    </me.tatarka.yieldlayout.YieldLayout>
+</LinearLayout>

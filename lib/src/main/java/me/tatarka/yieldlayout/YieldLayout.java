@@ -23,7 +23,11 @@ import java.util.List;
  * allowed. Any {@link Yield}'s that aren't replaced will simply be removed from the view hierarchy.
  */
 public class YieldLayout extends ViewGroup {
+    private static final int YIELD_LAYOUT_ID_TAG = 54231097;
+
     private int mLayoutResource;
+    private View mLayoutView;
+    private List<View> mChildren;
 
     public YieldLayout(Context context) {
         super(context);
@@ -46,6 +50,9 @@ public class YieldLayout extends ViewGroup {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.YieldLayout);
             mLayoutResource = a.getResourceId(R.styleable.YieldLayout_yield_layout, 0);
+            if (isInEditMode()) {
+                mLayoutResource = a.getResourceId(R.styleable.YieldLayout_tools_yield_layout, mLayoutResource);
+            }
             a.recycle();
         }
 
@@ -70,15 +77,52 @@ public class YieldLayout extends ViewGroup {
     }
 
     /**
-     * Sets the layout resource for the layout.
+     * Sets the layout resource for the layout. If the {@code YieldLayout} has already been added to
+     * the view hierarchy, this will update the shown view.
      *
      * @param layoutResource the layout resource
      */
     public void setLayoutResource(int layoutResource) {
         mLayoutResource = layoutResource;
+        inflate();
+    }
+
+    public View inflate(ViewGroup root) {
+        return inflate(root, true);
     }
 
     public View inflate(ViewGroup root, boolean attachToParent) {
+        View currentView = mLayoutView;
+        if (currentView == null) currentView = this;
+        return inflate(currentView, root, attachToParent);
+    }
+
+    private void inflate() {
+        ViewParent viewParent = null;
+        View currentView = this;
+
+        if (mLayoutView != null) {
+            currentView = mLayoutView;
+            viewParent = mLayoutView.getParent();
+        }
+
+        if (viewParent == null) {
+            viewParent = getParent();
+        }
+
+        if (viewParent == null) {
+            return;
+        }
+
+        if (!(viewParent instanceof ViewGroup)) {
+            throw new IllegalStateException("YieldLayout must have a non-null ViewGroup viewParent (Instead parent was: '" + viewParent + "')");
+        }
+
+        ViewGroup parent = (ViewGroup) viewParent;
+        inflate(currentView, parent, true);
+    }
+
+    private View inflate(View currentView, ViewGroup root, boolean attachToParent) {
         if (mLayoutResource == 0) {
             throw new IllegalStateException("YieldLayout must have a valid layoutResource");
         }
@@ -93,34 +137,15 @@ public class YieldLayout extends ViewGroup {
         }
 
         if (attachToParent && root != null) {
-            replaceView(this, view);
+            replaceView(currentView, view);
         }
 
-        return view;
-    }
-
-    public View inflate(ViewGroup root) {
-        return inflate(root, true);
-    }
-
-    private View inflate() {
-        ViewParent viewParent = getParent();
-        if (!(viewParent instanceof ViewGroup)) {
-            throw new IllegalStateException("YieldLayout must have a non-null ViewGroup viewParent (Instead parent was: '" + viewParent + "')");
-        }
-        ViewGroup parent = (ViewGroup) viewParent;
-       return inflate(parent, true);
+        return mLayoutView = view;
     }
 
     private void replaceYieldWithChildren(ViewGroup viewLayout) {
-        ArrayList<View> children = new ArrayList<View>(getChildCount());
-        for (int i = 0; i < getChildCount(); i++) {
-            children.add(getChildAt(i));
-        }
-        removeAllViewsInLayout();
-
-        ArrayList<Yield> yieldViews = new ArrayList<Yield>(children.size());
-        collectYieldViews(viewLayout, yieldViews);
+        List<View> children = takeChildren();
+        List<Yield> yieldViews = collectYieldViews(viewLayout, new ArrayList<Yield>(children.size()));
 
         if (children.size() > yieldViews.size()) {
             throw new IllegalArgumentException("YieldLayout you have added more children (" + children.size() + ") than expected (" + yieldViews.size() + ")");
@@ -129,18 +154,15 @@ public class YieldLayout extends ViewGroup {
         if (yieldViews.isEmpty()) return;
 
         if (children.isEmpty()) {
-            // No children, just remove all the yield views and return.
-            for (Yield yield : yieldViews) {
-                viewLayout.removeViewInLayout(yield);
-            }
+            removeEmptyYieldViews(yieldViews);
             return;
         }
 
-        boolean hasExplicitYieldIds = ((LayoutParams) children.get(0).getLayoutParams()).yieldId != 0;
+        boolean hasExplicitYieldIds = getYieldId(children.get(0)) != 0;
 
         if (hasExplicitYieldIds) {
             for (View child : children) {
-                int childYieldId = ((LayoutParams) child.getLayoutParams()).yieldId;
+                int childYieldId = getYieldId(child);
                 if (childYieldId == 0) {
                     throw new IllegalArgumentException("Expected layout_yield_id for " + child.getClass().getSimpleName() + " (If at least one child has a layout_yield_id, they all must)");
                 }
@@ -156,7 +178,7 @@ public class YieldLayout extends ViewGroup {
             for (int i = children.size() - 1; i >= 0; i--) {
                 Yield yield = yieldViews.remove(i);
                 View child = children.get(i);
-                int childYieldId = ((LayoutParams) child.getLayoutParams()).yieldId;
+                int childYieldId = getYieldId(child);
                 if (childYieldId != 0) {
                     //Means the previous one was 0
                     throw new IllegalArgumentException("Expected layout_yield_id for " + children.get(i - 1).getClass().getSimpleName() + " (If at least one child has a layout_yield_id, they all must)");
@@ -166,13 +188,53 @@ public class YieldLayout extends ViewGroup {
             }
         }
 
-        //Remove any extra yield views that weren't replaced by children
+        removeEmptyYieldViews(yieldViews);
+    }
+
+    private List<View> takeChildren() {
+        if (mLayoutView == null) {
+            mChildren = new ArrayList<View>(getChildCount());
+            for (int i = 0; i < getChildCount(); i++) {
+                mChildren.add(getChildAt(i));
+            }
+            removeAllViewsInLayout();
+        } else {
+            for (View child : mChildren) {
+                ViewParent viewParent = child.getParent();
+                if (viewParent instanceof ViewGroup) {
+                    ((ViewGroup) viewParent).removeViewInLayout(child);
+                }
+            }
+        }
+        return mChildren;
+    }
+
+    private static int getYieldId(View view) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params instanceof LayoutParams) {
+            int yieldId = ((LayoutParams) params).yieldId;
+            view.setTag(YIELD_LAYOUT_ID_TAG, yieldId);
+            return yieldId;
+        } else {
+            Integer yieldIdTag = (Integer) view.getTag(YIELD_LAYOUT_ID_TAG);
+            if (yieldIdTag != null) return yieldIdTag;
+        }
+        return 0;
+    }
+
+    private void removeEmptyYieldViews(List<Yield> yieldViews) {
         for (Yield yield : yieldViews) {
-            viewLayout.removeViewInLayout(yield);
+            yield.notifyKept();
+            if (yield.getKeepIfEmpty()) continue;
+
+            ViewParent viewParent = yield.getParent();
+            if (viewParent instanceof ViewGroup) {
+                ((ViewGroup) viewParent).removeViewInLayout(yield);
+            }
         }
     }
 
-    private void collectYieldViews(ViewGroup viewLayout, List<Yield> yieldViews) {
+    private List<Yield> collectYieldViews(ViewGroup viewLayout, List<Yield> yieldViews) {
         for (int i = 0; i < viewLayout.getChildCount(); i++) {
             View child = viewLayout.getChildAt(i);
             if (child instanceof Yield) {
@@ -181,6 +243,7 @@ public class YieldLayout extends ViewGroup {
                 collectYieldViews((ViewGroup) child, yieldViews);
             }
         }
+        return yieldViews;
     }
 
     private static Yield takeYieldWithId(List<Yield> list, int yieldId) {
@@ -192,7 +255,7 @@ public class YieldLayout extends ViewGroup {
         return null;
     }
 
-    private void replaceView(View toReplace, View replacement) {
+    private static void replaceView(View toReplace, View replacement) {
         ViewGroup yieldParent = (ViewGroup) toReplace.getParent();
         int yieldIndex = yieldParent.indexOfChild(toReplace);
         yieldParent.removeViewInLayout(toReplace);
