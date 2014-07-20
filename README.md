@@ -1,4 +1,4 @@
-yield-layout
+YieldLayout
 ============
 
 Have you ever had to create two almost-identical layout files because they had a few minor differences? Sure, you can fix it with `<include/>` but then you start ending up with layouts all over the place.
