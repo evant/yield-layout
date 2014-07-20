@@ -141,6 +141,19 @@ public View getView(int position, View convertView, ViewGroup parent) {
 }
 ```
 
+Or if you are changeing the outer layout instead of the child views,
+
+```java
+@Override
+public View getView(int position, View convertView, ViewGroup parent) {
+    if (convertView == null) {
+        int layout = getItemViewType(position) == 0 ? R.layout.layout_1 : R.layout.layout_2;  
+        convertView = YieldLayoutInflater.from(mContext).inflate(R.layout.list_item, layout, parent, false);
+    }
+    return convertView;
+}
+```
+
 ### Different numbers of children
 
 You may be wondering what happens if you don't specify as many child views for `YieldLayout` as there are `Yield`s. Too many children is an error because there is no way to know where to put the extra ones. Too few, however, will simply cause the extra `Yields` to be removed.
