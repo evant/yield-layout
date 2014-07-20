@@ -24,5 +24,4 @@
         android:textSize="@dimen/text_display_2"
         android:gravity="center"
         />
-
 </me.tatarka.yieldlayout.YieldLayout>
