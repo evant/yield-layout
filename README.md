@@ -1,9 +1,11 @@
-yield-layout
+YieldLayout
 ============
 
 Have you ever had to create two almost-identical layout files because they had a few minor differences? Sure, you can fix it with `<include/>` but then you start ending up with layouts all over the place.
 
 YieldLayout to the rescue! It works opposite of `<include/>` so you can combine one layout around another instead of inside it. After it does it's magic, you will have 0 extra views in your layout hierarchy, just like `<include/>`, so it's like it was never there.
+
+![preview](https://raw.githubusercontent.com/evant/yield-layout/master/images/preview.png)
 
 ## Usage
 
@@ -137,6 +139,19 @@ public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
         int layout = getItemViewType(position) == 0 ? R.layout.list_item_1 : R.layout.list_item_2;  
         convertView = YieldLayoutInflater.from(mContext).inflate(layout, parent, false);
+    }
+    return convertView;
+}
+```
+
+Or if you are changeing the outer layout instead of the child views,
+
+```java
+@Override
+public View getView(int position, View convertView, ViewGroup parent) {
+    if (convertView == null) {
+        int layout = getItemViewType(position) == 0 ? R.layout.layout_1 : R.layout.layout_2;  
+        convertView = YieldLayoutInflater.from(mContext).inflate(R.layout.list_item, layout, parent, false);
     }
     return convertView;
 }
