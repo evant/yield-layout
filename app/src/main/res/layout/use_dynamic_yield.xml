@@ -24,6 +24,8 @@
             android:textSize="@dimen/text_menu"
             android:textColor="@color/text_black"
             android:layout_marginRight="16dp"
+            android:minHeight="64dp"
+            android:button="@drawable/radio_btn_selector"
             />
 
         <RadioButton
@@ -33,6 +35,8 @@
             android:text="@string/layout_2"
             android:textSize="@dimen/text_menu"
             android:textColor="@color/text_black"
+            android:minHeight="64dp"
+            android:button="@drawable/radio_btn_selector"
             />
     </RadioGroup>
 
