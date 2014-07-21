@@ -23,8 +23,6 @@ import java.util.List;
  * allowed. Any {@link Yield}'s that aren't replaced will simply be removed from the view hierarchy.
  */
 public class YieldLayout extends ViewGroup {
-    private static final int YIELD_LAYOUT_ID_TAG = 54231097;
-
     private int mLayoutResource;
     private View mLayoutView;
     private List<View> mChildren;
@@ -158,16 +156,16 @@ public class YieldLayout extends ViewGroup {
             return;
         }
 
-        boolean hasExplicitYieldIds = getYieldId(children.get(0)) != 0;
+        boolean hasExplicitYieldIds = children.get(0).getId() != NO_ID;
 
         if (hasExplicitYieldIds) {
             for (View child : children) {
-                int childYieldId = getYieldId(child);
-                if (childYieldId == 0) {
-                    throw new IllegalArgumentException("Expected layout_yield_id for " + child.getClass().getSimpleName() + " (If at least one child has a layout_yield_id, they all must)");
+                int childId = child.getId();
+                if (childId == NO_ID) {
+                    throw new IllegalArgumentException("Expected layout_yield_id for " + child.getClass().getSimpleName() + " (If at least one child has an id, they all must)");
                 }
 
-                Yield yield = takeYieldWithId(yieldViews, childYieldId);
+                Yield yield = takeYieldWithId(yieldViews, childId);
                 if (yield == null) {
                     throw new IllegalArgumentException("YieldLayout includes child with layout_yield_id which is not in the layout:");
                 }
@@ -178,10 +176,10 @@ public class YieldLayout extends ViewGroup {
             for (int i = children.size() - 1; i >= 0; i--) {
                 Yield yield = yieldViews.remove(i);
                 View child = children.get(i);
-                int childYieldId = getYieldId(child);
-                if (childYieldId != 0) {
-                    //Means the previous one was 0
-                    throw new IllegalArgumentException("Expected layout_yield_id for " + children.get(i - 1).getClass().getSimpleName() + " (If at least one child has a layout_yield_id, they all must)");
+                int childId = child.getId();
+                if (childId != NO_ID) {
+                    //Means the previous one was NO_ID
+                    throw new IllegalArgumentException("Expected layout_yield_id for " + children.get(i - 1).getClass().getSimpleName() + " (If at least one child has an id, they all must)");
                 }
 
                 replaceView(yield, child);
@@ -207,19 +205,6 @@ public class YieldLayout extends ViewGroup {
             }
         }
         return mChildren;
-    }
-
-    private static int getYieldId(View view) {
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        if (params instanceof LayoutParams) {
-            int yieldId = ((LayoutParams) params).yieldId;
-            view.setTag(YIELD_LAYOUT_ID_TAG, yieldId);
-            return yieldId;
-        } else {
-            Integer yieldIdTag = (Integer) view.getTag(YIELD_LAYOUT_ID_TAG);
-            if (yieldIdTag != null) return yieldIdTag;
-        }
-        return 0;
     }
 
     private void removeEmptyYieldViews(List<Yield> yieldViews) {
@@ -280,47 +265,5 @@ public class YieldLayout extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(0, 0);
-    }
-
-    @Override
-    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new LayoutParams(getContext(), attrs);
-    }
-
-    @Override
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
-        return new LayoutParams(p);
-    }
-
-    @Override
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new LayoutParams(super.generateDefaultLayoutParams());
-    }
-
-    @Override
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof LayoutParams;
-    }
-
-    public static class LayoutParams extends ViewGroup.LayoutParams {
-        public int yieldId;
-
-        public LayoutParams(Context c, AttributeSet attrs) {
-            super(c, attrs);
-            TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.YieldLayout);
-            yieldId = a.getResourceId(R.styleable.YieldLayout_layout_yield_id, 0);
-            a.recycle();
-        }
-
-        public LayoutParams(int width, int height) {
-            super(width, height);
-        }
-
-        public LayoutParams(ViewGroup.LayoutParams source) {
-            super(source);
-            if (source instanceof LayoutParams) {
-                yieldId = ((LayoutParams) source).yieldId;
-            }
-        }
     }
 }

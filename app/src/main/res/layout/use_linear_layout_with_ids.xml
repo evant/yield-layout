@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        app:layout_yield_id="@+id/second"
+        android:id="@+id/second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/second"
@@ -18,7 +18,7 @@
         />
 
     <TextView
-        app:layout_yield_id="@+id/first"
+        android:id="@+id/first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

@@ -3,7 +3,6 @@
     <declare-styleable name="YieldLayout">
         <attr name="yield_layout" format="reference"/>
         <attr name="tools_yield_layout" format="reference"/>
-        <attr name="layout_yield_id" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="Yield">

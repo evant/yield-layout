@@ -89,7 +89,8 @@ Then you can create another file that uses that layout, filling in the yields.
 </me.tatarka.yieldlayout.YieldLayout>
 ```
 
-You can also define yield id's to specify which child views go with which yields.
+By default child views are matched against `Yield`s in the order they are defined. However, if you
+give your child views explicit id's, they will be matched against the `Yield` id's.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -101,8 +102,9 @@ You can also define yield id's to specify which child views go with which yields
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- This one will appear second -->
     <TextView
-        app:layout_yield_id="@+id/second"
+        android:id="@+id/second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/second"
@@ -111,8 +113,9 @@ You can also define yield id's to specify which child views go with which yields
         android:gravity="center"
         />
 
+    <!-- This one will appear first -->
     <TextView
-        app:layout_yield_id="@+id/first"
+        android:id="@+id/first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -141,7 +144,7 @@ public View getView(int position, View convertView, ViewGroup parent) {
 
 ### Different numbers of children
 
-You may be wondering what happens if you don't specify as many child views for `YieldLayout` as there are `Yield`s. Too many children is an error because there is no way to know where to put the extra ones. Too few, however, will simply cause the extra `Yields` to be removed.
+You may be wondering what happens if you don't specify as many child views for `YieldLayout` as there are `Yield`s. Too many children is an error because there is no way to know where to put the extra ones. Too few, however, will simply cause the extra `Yield`s to be removed.
 
 Sometimes, however, you may depend on the `Yield` to correctly layout your views. For example,
 
